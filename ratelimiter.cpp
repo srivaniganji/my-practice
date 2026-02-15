@@ -25,14 +25,14 @@ public:
 
 class TrafficManager {
 private:
-    RateLimiter* rateLimiter;
+    RateLimiter& rateLimiter;
 
 public:
-    TrafficManager(RateLimiter* rateLimiter) : rateLimiter(rateLimiter) {}
+    TrafficManager(RateLimiter& rateLimiter) : rateLimiter(rateLimiter) {}
 
     bool request(int timestamp) {
-        if(rateLimiter->isRequestAllowed(timestamp)){
-            rateLimiter->addRequest(timestamp);
+        if(rateLimiter.isRequestAllowed(timestamp)){
+            rateLimiter.addRequest(timestamp);
             return true; 
         }
         return false;
@@ -40,27 +40,31 @@ public:
 };
 
 int main() {
-    RateLimiter* ratelimiter = new RateLimiter(5);
-    TrafficManager* trafficManager = new TrafficManager(ratelimiter);
+    // RateLimiter* ratelimiter = new RateLimiter(5);
+    // TrafficManager* trafficManager = new TrafficManager(ratelimiter);
+
+    RateLimiter ratelimiter(5);
+    TrafficManager trafficManager(ratelimiter);
+
 
     // for(int i=1;i<=6;i++){
-    //     if(trafficManager->request(i)){
+    //     if(trafficManager.request(i)){
     //         cout << "Request at timestamp " << i << " is allowed." << endl;
     //     } else {
     //         cout << "Request at timestamp " << i << " is denied." << endl;
     //     }
     // }
 
-    cout << trafficManager->request(1) << endl;  // true
-    cout << trafficManager->request(10) << endl; // true            
-    cout << trafficManager->request(20) << endl; // true
-    cout << trafficManager->request(30) << endl; // true
-    cout << trafficManager->request(40) << endl; // true
-    cout << trafficManager->request(50) << endl; // false
-    cout << trafficManager->request(61) << endl; // true
+    cout << trafficManager.request(1) << endl;  // true
+    cout << trafficManager.request(10) << endl; // true            
+    cout << trafficManager.request(20) << endl; // true
+    cout << trafficManager.request(30) << endl; // true
+    cout << trafficManager.request(40) << endl; // true
+    cout << trafficManager.request(50) << endl; // false
+    cout << trafficManager.request(61) << endl; // true
 
-    delete trafficManager;
-    delete ratelimiter;
+    // delete trafficManager;
+    // delete ratelimiter;
 
     return 0;
 }
